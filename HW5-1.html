@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Google Maps Demo</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+
+      #map {
+        height: 100%;
+      }
+
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script>
+    var map;
+    var infowindow;
+
+    function initMap() {
+        var Xitun = {lat: 24.181502, lng: 120.627446};
+
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: Xitun,
+          zoom: 14
+        });
+
+        var request = {
+            query: '台中西屯區郵局',
+        };
+        var request2 = {
+            query: '台中西屯區中油',
+        };
+
+        infowindow = new google.maps.InfoWindow();
+        var service = new google.maps.places.PlacesService(map);
+        service.textSearch(request, callback);
+        var service2 = new google.maps.places.PlacesService(map);
+        service2.textSearch(request2, callback2);
+        /*service.nearbySearch({
+          location: FCU,
+          radius: 5000,
+          type: ['post_office']
+        }, callback);*/
+    }
+
+    function callback(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          for (var i = 0; i < results.length; i++) {
+            var place = results[i];
+            createMarker(results[i]);
+          }
+        }
+    }
+    function callback2(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          for (var i = 0; i < results.length; i++) {
+            var place2 = results[i];
+            createMarker2(results[i]);
+          }
+        }
+    }
+
+    function createMarker(place) {
+        var placeLoc = place.geometry.location;
+        var marker = new google.maps.Marker({
+          map: map,
+          position: place.geometry.location,
+          icon: 'post_office.png'
+        });
+
+        google.maps.event.addListener(marker, 'mouseover', function() {
+          infowindow.setContent(place.name);
+          infowindow.open(map, this);
+        });
+    }
+    function createMarker2(place2) {
+        var placeLoc = place2.geometry.location;
+        var marker = new google.maps.Marker({
+          map: map,
+          position: place2.geometry.location,
+          icon: 'gas_station.png'
+        });
+
+        google.maps.event.addListener(marker, 'mouseover', function() {
+          infowindow.setContent(place2.name);
+          infowindow.open(map, this);
+        });
+    }
+    </script>
+</head>
+<body>
+    <div id="map"></div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9OeyRzw6jB5FzFccsot70IylNrzz0RCU&libraries=places&callback=initMap" async defer></script>
+</body>
+</html>
